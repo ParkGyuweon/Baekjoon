@@ -17,6 +17,7 @@ for y in range(N):
             wall.append((x, y))
 
 def bfs(grid, virus, virus_visited):
+    zero_cnt = len(virus)
     stack = deque(virus)
     visited = [-1] * (N * N)
     if len(virus_visited) + len(wall) == N * N:
@@ -27,10 +28,11 @@ def bfs(grid, virus, virus_visited):
         cur_x, cur_y, cur_time = stack.popleft()
         for x, y in direction:
             new_x, new_y = cur_x + x, cur_y + y
-            if 0 <= new_x < N and 0 <= new_y < N and grid[new_y][new_x] != 1 and (new_x, new_y) not in virus and visited[new_y * N + new_x] == -1:
+            if 0 <= new_x < N and 0 <= new_y < N and grid[new_y][new_x] != 1 and (new_x, new_y, 0) not in virus and visited[new_y * N + new_x] == -1:
                 stack.append((new_x, new_y, cur_time + 1))
                 visited[new_y * N + new_x] = 0
-                if visited.count(0) + len(wall) == N * N:
+                zero_cnt += 1
+                if zero_cnt + len(wall) == N * N:
                     return cur_time + 1
 
 def back(grid, wall, virus, virus_visited, start, M, virus_possible):
