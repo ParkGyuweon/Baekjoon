@@ -1,23 +1,24 @@
 T = int(input())
 
-def back(sum, B, start, diff):
-    global min_value
-    if start + diff >= N:
+def make_top(cur_sum, start):
+    global min_height_sum
+    if cur_sum - B >= min_height_sum:
         return
-    sum = sum + L[start + diff]       
-    if sum - B >= min_value:
+
+    if cur_sum >= B:
+        min_height_sum = min(min_height_sum, cur_sum - B)
         return
-    if sum >= B and sum - B < min_value:
-        min_value = sum - B
-    for j in range(1, N):
-        back(sum, B, start, diff + j)
-        
-for k in range(T):
+
+    if start == N:
+        return
+
+    for person in range(start, N):
+        make_top(cur_sum + height_list[person], person + 1)
+
+for t in range(1, T + 1):
     N, B = map(int, input().split())
-    L = list(map(int, input().split()))
-    min_value = 10E10
-    for i in range(N):
-        sum = 0
-        start = i
-        back(sum, B, start, 0)
-    print(f'#{k + 1} {min_value}')
+    height_list = list(map(int, input().split()))
+
+    min_height_sum = 10E10
+    make_top(0, 0)
+    print(f'#{t} {min_height_sum}')
