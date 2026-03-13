@@ -13,13 +13,7 @@ def pool_dfs(cur_fee, month):
     else:
         pool_dfs(cur_fee + month_fee, month + 1)
         pool_dfs(cur_fee + (day_fee * year_plan[month]), month + 1)
-
-    if month <= 9:
         pool_dfs(cur_fee + months_fee, month + 3)
-    elif month == 10:
-        pool_dfs(cur_fee + months_fee, month + 2)
-    elif month == 11:
-        pool_dfs(cur_fee + months_fee, month + 1)
 
 for t in range(1, T + 1):
     day_fee, month_fee, months_fee, year_fee = map(int, input().split())
