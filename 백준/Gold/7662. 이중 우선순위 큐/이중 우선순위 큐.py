@@ -1,9 +1,11 @@
+import sys
 from collections import defaultdict
 import heapq
 T = int(input())
+input = sys.stdin.readline
 
 for t in range(1, T + 1):
-    K = int(input())
+    K = int(input().strip())
     total_number = defaultdict(int)
     number_max = []
     number_min = []
