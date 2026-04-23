@@ -1,37 +1,44 @@
+from heapq import heappop, heappush
 from collections import defaultdict
-import heapq
-import sys
-input = sys.stdin.readline
 
 N, M, X = map(int, input().split())
-bus_fee = defaultdict(list)
-
+graph = defaultdict(list)
 for _ in range(M):
-    city1, city2, fee = map(int, input().split())
-    bus_fee[city1].append((city2, fee))
+    start, end, T = map(int, input().split())
+    graph[start].append((T, end))
 
-def two_node(node):
-    distances = [10E10] * N
-    distances[node - 1] = 0
-    pq = [(0, node)]
-    while pq:
-        current_dist, current_node = heapq.heappop(pq)
-        if current_dist > distances[current_node - 1]:
+going = [0] * N
+for student in range(1, N + 1):
+    queue = [(0, student)]
+    distance = [float('INF') for _ in range(N)]
+    distance[student - 1] = 0
+    while queue:
+        cur_weight, cur_node = heappop(queue)
+        if distance[cur_node - 1] < cur_weight:
             continue
-        if current_node in bus_fee:
-            for neighbor, fee in bus_fee[current_node]:
-                distance = current_dist + fee
 
-                if distance < distances[neighbor - 1]:
-                    distances[neighbor - 1] = distance
-                    heapq.heappush(pq, (distance, neighbor))
-    return distances
+        for weight, node in graph[cur_node]:
+            if distance[node - 1] <= cur_weight + weight:
+                continue
+            distance[node - 1] = cur_weight + weight
+            heappush(queue, (cur_weight + weight, node))
 
-answer = [0] * N
-max_val = 0
-for n in range(1, N + 1):
-    answer[n - 1] = two_node(n)[X - 1]
-answer_2 = two_node(X)
-for n in range(N):
-    max_val = max(max_val, answer[n] + answer_2[n])
-print(max_val)
+    going[student - 1] = distance[X - 1]
+
+queue = [(0, X)]
+distance = [float('INF') for _ in range(N)]
+distance[X - 1] = 0
+while queue:
+    cur_weight, cur_node = heappop(queue)
+    if distance[cur_node - 1] < cur_weight:
+        continue
+    for weight, node in graph[cur_node]:
+        if distance[node - 1] <= cur_weight + weight:
+            continue
+        distance[node - 1] = cur_weight + weight
+        heappush(queue, (cur_weight + weight, node))
+
+for student in range(N):
+    distance[student] += going[student]
+
+print(max(distance))
