@@ -1,39 +1,64 @@
+from heapq import heappop, heappush
 from collections import defaultdict
-import heapq
-import sys
-input = sys.stdin.readline
+graph = defaultdict(list)
 
 N, E = map(int, input().split())
-bus_fee = defaultdict(list)
-
 for _ in range(E):
-    city1, city2, fee = map(int, input().split())
-    bus_fee[city1].append((city2, fee))
-    bus_fee[city2].append((city1, fee))
-
+    a, b, c = map(int, input().split())
+    graph[a].append((c, b))
+    graph[b].append((c, a))
 node1, node2 = map(int, input().split())
 
-def two_node(start_node, end_node):
-    pq = [(0, start_node)]
-    distances = [10E10] * N
-    distances[start_node - 1] = 0
-    while pq:
-        current_dist, current_node = heapq.heappop(pq)
-        if current_dist > distances[current_node - 1]:
+# 시작 -> v1 -> v2 -> 끝
+queue = [(0, 1)]
+distance = [float('INF') for _ in range(N)]
+distance[0] = 0
+while queue:
+    cur_weight, cur_node = heappop(queue)
+    if distance[cur_node - 1] < cur_weight:
+        continue
+    for weight, node in graph[cur_node]:
+        if distance[node - 1] <= cur_weight + weight:
             continue
+        distance[node - 1] = cur_weight + weight
+        heappush(queue, (cur_weight + weight, node))
+start_to_v1 = distance[node1 - 1]
+start_to_v2 = distance[node2 - 1]
 
-        if current_node in bus_fee:
-            for neighbor, fee in bus_fee[current_node]:
-                distance = current_dist + fee
+queue = [(0, N)]
+distance = [float('INF') for _ in range(N)]
+distance[N - 1] = 0
+while queue:
+    cur_weight, cur_node = heappop(queue)
+    if distance[cur_node - 1] < cur_weight:
+        continue
+    for weight, node in graph[cur_node]:
+        if distance[node - 1] <= cur_weight + weight:
+            continue
+        distance[node - 1] = cur_weight + weight
+        heappush(queue, (cur_weight + weight, node))
 
-                if distance < distances[neighbor - 1]:
-                    distances[neighbor - 1] = distance
-                    heapq.heappush(pq, (distance, neighbor))
+v1_to_end = distance[node1 - 1]
+v2_to_end = distance[node2 - 1]
 
-    return distances[end_node - 1]
+queue = [(0, node1)]
+distance = [float('INF') for _ in range(N)]
+distance[node1 - 1] = 0
+while queue:
+    cur_weight, cur_node = heappop(queue)
+    if distance[cur_node - 1] < cur_weight:
+        continue
+    for weight, node in graph[cur_node]:
+        if distance[node - 1] <= weight + cur_weight:
+            continue
+        distance[node - 1] = weight + cur_weight
+        heappush(queue, (weight + cur_weight, node))
 
-result = min(two_node(1, node1) + two_node(node1, node2) + two_node(node2, N), two_node(1, node2) + two_node(node2, node1) + two_node(node1, N))
-if result >= 10E10:
+v1_to_v2 = distance[node2 - 1]
+v2_to_v1 = distance[node2 - 1]
+
+result = min(start_to_v1 + v1_to_v2 + v2_to_end, start_to_v2 + v2_to_v1 + v1_to_end)
+if result == float('INF'):
     print(-1)
 else:
     print(result)
