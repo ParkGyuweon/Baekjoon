@@ -1,37 +1,31 @@
+from heapq import heappop, heappush
 from collections import defaultdict
-import heapq
-import sys
-input = sys.stdin.readline
-min_val = 10E10
 
-N = int(input().strip())
-M = int(input().strip())
-bus_fee = defaultdict(list)
-
-# 도시 간의 거리를 저장하는 부분(출발 도시, 도착 도시)가 key
+N = int(input())
+M = int(input())
+graph = defaultdict(list)
 for _ in range(M):
-    city1, city2, fee = map(int, input().split())
-    bus_fee[city1].append((city2, fee))
+    start, end, cost = map(int, input().split())
+    graph[start].append((cost, end))
 
-start_city, end_city = map(int, input().split())
-distances = [10E10] * N
-distances[start_city - 1] = 0
-pq = [(0, start_city, [start_city])]
-cur_line = 0
-
-while pq:
-    current_dist, current_node, cur_visited = heapq.heappop(pq)
-    if current_dist > distances[current_node - 1]:
+start, end = map(int, input().split())
+queue = [(0, start, [start])]
+distance = [float('INF') for _ in range(N)]
+distance[start - 1] = 0
+answer = 0
+while queue:
+    cur_weight, cur_node, cur_path = heappop(queue)
+    if distance[cur_node - 1] < cur_weight:
         continue
-    if current_node in bus_fee:
-        for neighbor, fee in bus_fee[current_node]:
-            distance = current_dist + fee
+    for weight, node in graph[cur_node]:
+        if distance[node - 1] <= cur_weight + weight:
+            continue
+        distance[node - 1] = cur_weight + weight
+        if node == end:
+            answer = cur_path + [node]
+        heappush(queue, (weight + cur_weight, node, cur_path + [node]))
 
-            if distance < distances[neighbor - 1]:
-                distances[neighbor - 1] = distance
-                if neighbor == end_city:
-                    cur_line = cur_visited + [neighbor]
-                heapq.heappush(pq, (distance, neighbor, cur_visited + [neighbor]))
-print(distances[end_city - 1])
-print(len(cur_line))
-print(' '.join(map(str, cur_line)))
+print(distance[end - 1])
+print(len(answer))
+print(' '.join(map(str, answer)))
+
