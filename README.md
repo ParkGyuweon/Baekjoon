@@ -1,2 +1,50 @@
-# Baekjoon
-This is an auto push repository for Baekjoon Online Judge created with [BaekjoonHub](https://github.com/BaekjoonHub/BaekjoonHub).
+# Algorithm Solutions
+
+알고리즘 문제 풀이를 정리하는 저장소입니다.
+
+백준, 프로그래머스, SWEA에서 푼 문제들을 플랫폼과 난이도별로 모아두고 있습니다. 문제를 다시 풀거나 비슷한 유형을 복습할 때 빠르게 찾아보기 위한 개인 풀이 아카이브입니다.
+
+## 폴더 구조
+
+```text
+.
+├── 백준/
+│   ├── Bronze/
+│   ├── Silver/
+│   ├── Gold/
+│   └── Platinum/
+├── 프로그래머스/
+│   ├── 0/
+│   ├── 1/
+│   ├── 2/
+│   └── 3/
+└── SWEA/
+    ├── D1/
+    ├── D2/
+    ├── D3/
+    ├── D4/
+    ├── D5/
+    └── Unrated/
+```
+
+각 문제 폴더는 보통 다음과 같은 형식으로 구성됩니다.
+
+```text
+문제번호. 문제이름/
+├── README.md
+└── 풀이파일.py
+```
+
+## 사용 언어
+
+- Python
+
+## 정리 기준
+
+- 문제 풀이 코드는 통과한 풀이를 기준으로 저장합니다.
+- 문제별 `README.md`에는 문제 정보와 제출 결과를 함께 보관합니다.
+- 같은 유형의 문제를 다시 볼 수 있도록 플랫폼과 난이도 기준의 기존 구조를 유지합니다.
+
+## 목표
+
+꾸준히 문제를 풀며 알고리즘 구현력과 문제 해결 패턴을 쌓는 것을 목표로 합니다.
